@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Une introduction au WebScraping</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <meta name="description" content="Intro au WebScraping"/>
+    <meta name="generator" content="xaringan and remark.js"/>
+    <meta name="github-repo" content="benjaminguinaudeau/eiom_2022_webscraping"/>
+    <meta name="twitter:title" content="Intro au WebScraping"/>
+    <meta name="twitter:description" content="Intro au WebScraping"/>
+    <meta name="twitter:url" content="https://www.benguinaudeau.com"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@Ben_Guinaudeau"/>
+    <meta name="twitter:site" content="@Ben_Guinaudeau"/>
+    <meta property="og:title" content="Intro au WebScraping"/>
+    <meta property="og:description" content="Intro au WebScraping"/>
+    <meta property="og:url" content="https://www.benguinaudeau.com"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="en_US"/>
+    <meta property="article:author" content="Benjamin Guinaudeau"/>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/lexis.css" type="text/css" />
+    <link rel="stylesheet" href="css/lexis-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+layout: true
+
+&lt;style&gt;
+.onehundredtwenty {
+  font-size: 120%;
+   }
+
+&lt;style&gt;
+.ninety {
+  font-size: 90%;
+   }
+
+.eightyfive {
+  font-size: 85%;
+   }
+   
+.eighty {
+  font-size: 80%;
+   }
+   
+.seventyfive {
+  font-size: 75%;
+   }
+   
+.seventy {
+  font-size: 70%;
+   }
+   
+.fifty {
+  font-size: 50%;
+   }
+   
+.forty {
+  font-size: 40%;
+   }
+&lt;/style&gt;
+
+
+
+
+
+
+&lt;!-- --- --&gt;
+&lt;!-- class: banner --&gt;
+
+
+---
+name: title-slide
+
+&lt;div style="background-image: url('images/scraping2.jpeg'); background-size: 65%; background-position: 70% 50%; background-repeat: no-repeat;"&gt;
+
+## Une introduction au WebScraping
+
+
+###.fancy[Naviguer, &lt;br&gt;Aspirer, &lt;br&gt;Extraire, &lt;br&gt;Nettoyer]
+
+&lt;br&gt;
+&lt;br&gt;
+
+[.seventyfive[<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg> @Ben_Guinaudeau]](http://twitter.com/Ben_Guinaudeau)&lt;br&gt;
+[.seventyfive[<svg aria-hidden="true" role="img" viewBox="0 0 496 512" style="height:1em;width:0.97em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg> @benjaminguinaudeau]](http://github.com/benjaminguinaudeau)&lt;br&gt;
+[.seventyfive[<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:black;overflow:visible;position:relative;"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg> benguinaudeau.com/]](https://benguinaudeau.com/)
+
+.seventyfive[4 Janvier 2022]
+
+.fifty[Lien vers la présentation: [benguinaudeau.com/maindoc/eiom_2022_webscraping](https://benguinaudeau.com/maindoc/eiom_2022_webscraping)]
+
+---
+
+### Objectif: Un tremplin non technique vers le webscraping
+
+&lt;hr style="height:15px; visibility:hidden;" /&gt;
+1. Apprendre la structure d'un projet de webscraping
+--
+
+&lt;hr style="height:15px; visibility:hidden;" /&gt;
+2. Introduire les requêtes HTTP et les langages HTML/CSS
+--
+
+&lt;hr style="height:15px; visibility:hidden;" /&gt;
+3. Présenter les packages `{xml2}` et `{rvest}`
+
+---
+
+### Programme de l'atelier
+
+1. .fancy[Webscraping] .seventyfive[comme dans "grattage du web"?]
+--
+
+2. .fancy[Naviguer] .seventyfive[Localiser les données brutes]
+--
+
+3. .fancy[Aspirer] .seventyfive[Lire une page HTML]
+--
+
+4. .fancy[Extraire] .seventyfive[Raffiner les données brutes]
+--
+
+5. .fancy[Nettoyer]
+--
+
+6. .seventyfive[9 conseils pour devenir une "gratteuse" professionnelle]
+
+---
+
+### .fancy[Webscraping]
+
+&lt;center&gt;
+&lt;img src="images/grattage.png"&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Webscraping]
+
+&lt;center&gt;
+&lt;div class="tenor-gif-embed" data-postid="10982646" data-share-method="host" data-aspect-ratio="1.38122" data-width="70%"&gt;
+&lt;a href="https://tenor.com/view/shiba-inu-computer-fast-typing-gif-10982646"&gt;Shiba Inu GIF&lt;/a&gt; from &lt;a href="https://tenor.com/search/shiba-gifs"&gt;Shiba GIFs&lt;/a&gt;
+&lt;/div&gt; 
+&lt;script type="text/javascript" async src="https://tenor.com/embed.js"&gt;&lt;/script&gt;
+&lt;/center&gt;
+
+---
+
+
+### .fancy[Webscraping]
+
+&gt; Aspiration/extraction automatique de données web
+--
+
+.cols3[
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+  &lt;center&gt;
+  Données non-structurées, lisibles par l'humain et publiquement accessibles
+  &lt;img src = "images/debat_unstructured.png"&gt;
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+  &lt;/center&gt;
+  
+]
+.cols3[
+  &lt;br&gt;
+  &lt;center&gt;
+  .large[**`-&gt;`**]
+  &lt;/center&gt;
+]
+.cols3[
+  &lt;hr style="height:10px; visibility:hidden;" /&gt;
+  &lt;center&gt;
+  Jeux de données sytématiques, structurés, rectangulaires et lisibles par la machine
+  &lt;img src = "images/debat_structured.png"&gt;
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+  &lt;/center&gt;
+]
+---
+
+### .fancy[Webscraping] .seventyfive[A quoi bon?]
+
+&lt;center&gt;
+&lt;img src="images/meme/1_yXPBG8SczoV4UUOMkfJaUg.jpeg"&gt;
+&lt;/center&gt;
+
+---
+
+### La révolution digitale est une opportunité unique pour les chercheurs.euses
+
+.seventyfive[
+1 Accès exhaustif à d'immense corpus de documents
+  + médias, accords internationaux, discours et procédures parlementaires, rapports annuels d'entreprises, jurisprudences, etc.
+]
+
+--
+
+&lt;!-- Les réseaux sociaux transforment chaque utilisateur en producteur de contenu --&gt;
+.seventyfive[
+2 La trace digitale des réseaux sociaux permet l'étude de nombreux phénomènes sociaux
+  + polarisation affective/idéologique (Facebook), transmission de l'information parmi les acteurs d'un marché (Twitter), parcours professionels (Linkedin), ...
+]
+
+---
+
+### Les sites web sont optimisés pour une navigation humaine
+
+&gt; A quel âge Justin Trudeau est-il devenu premier ministre? 
+
+--
+
+Etapes: 
+  A. naviguer vers un moteur de recherche
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+--
+
+  B. chercher `"Justin Trudeau dates importantes"`
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+--
+
+  C. sélectionner parmi les résultats un site contenant l'information
+  &lt;hr style="height:15px; visibility:hidden;" /&gt;
+--
+
+  D. extraire rapidement l'information cherchée en exploitant le formatage
+  
+---
+
+### Mais l'extraction systématique de données peut rapidement devenir laborieux
+
+&gt; A quel âge les premiers ministres du Canada sont-ils devenus premier ministre?
+
+Répéter A-D pour chacun des 23 premiers ministres
+--
+
+  + 1 Justin Trudeau: A, B, C,D
+--
+
+  + 2 Stephen Harper: A, B, C, D
+--
+
+  + 3 Paul Martin: A, B, C, D
+--
+
+  + ...
+  + 23 John Macdonald: A, B, C, D
+
+---
+
+&lt;center&gt;
+&lt;h3&gt; Aspiration automatique de données web &lt;/h3&gt;
+&lt;/center&gt;
+
+.leftcol[
+#### Avantages
+  + efficace (même pour des ensembles de mégadonnées)
+  + systématique (données disponibles pour la population ; pas besoin d'échantillonage)
+  + précis
+  + (reproducible)
+]
+
+--
+
+.rightcol[
+#### Inconvénients
+  + détournement de l'objectif initial des sites internet (processus technique)
+  + potentielle violation des CGU
+]
+
+---
+
+### Comment approcher un projet d'aspiration automatique? 
+
+&gt; *There is no one solution to all problems. It’s the problem itself that can lead to the solution.* &lt;br&gt; .seventyfice[~Jay Maisel]
+
+--
+
+Chaque projet est unique, mais tous reposent sur les mêmes compétences:
+  * ingénierie URL
+  * connaissances minimales des requêtes HTTP et du langage HTML
+  * manipulation des sélecteurs CSS
+
+---
+class: center
+
+&lt;br&gt;
+
+### Une approche unifiée pour les projets d'aspiration automatique
+
+&lt;br&gt;
+--
+
+1 .fancy[Naviguer] .seventyfive[Localiser les données brutes]
+--
+
+
+2 .fancy[Aspirer] .seventyfive[Accéder à l'information brute]
+--
+
+
+3 .fancy[Extraire] .seventyfive[Raffiner les données brutes]
+--
+
+
+4 .fancy[Nettoyer]
+
+---
+
+&lt;center&gt;
+
+&lt;h3&gt; 1 .fancy[Naviguer] .seventyfive[Localiser les données brutes] &lt;/h3&gt; 
+
+&lt;br&gt;
+
+&lt;img src = "images/meme/morpheus_meme-432x270.png" style = "height: 100%"&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Naviguer] .seventyfive[Localiser les données brutes]
+
+&lt;br&gt;
++ Quelles données doivent être prélevées? 
+--
+
++ Quelles pages devront être visitées afin de collecter les données?
+--
+
++ Est-ce que la collecte devra être répétée chaque jour, chaque semaine, chaque année?
+
+---
+
+### .fancy[Exemple 1] Dates des élections fédérales canadiennes et allemandes
+
+--
+
+&lt;center&gt;
+&lt;a href = "https://www.elections.ca/content.aspx?section=ele&amp;dir=pas&amp;document=index&amp;lang=f"&gt; Site officiel d'Elections Canada&lt;/a&gt;
+&lt;img src="images/elect_canada_official.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Exemple 1] Dates des élections fédérales canadiennes et allemandes
+
+&lt;center&gt;
+&lt;a href = "https://www.bundestag.de/parlament/wahlen/ergebnisse_seit1949-244692"&gt; Site officiel des élections allemandes&lt;/a&gt;
+&lt;img src="images/elect_german_official.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Exemple 1] Dates des élections fédérales canadiennes et allemandes
+
+&lt;center&gt;
+&lt;a href = "https://en.wikipedia.org/wiki/List_of_Canadian_federal_general_elections"&gt; Liste des élections canadiennes sur Wikipédia&lt;/a&gt;
+&lt;img src="images/elect_canada_wiki.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Exemple 1] Dates des élections fédérales canadiennes et allemandes
+
+&lt;center&gt;
+&lt;a href = "https://de.wikipedia.org/wiki/Bundestagswahl"&gt; Liste des élections allemandes sur Wikipédia&lt;/a&gt;
+&lt;img src="images/elect_german_wiki.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+&lt;center&gt;
+
+&lt;h3&gt; 2 .fancy[Aspirer] .seventyfive[Charger la donnée brute] &lt;/h3&gt; 
+
+&lt;br&gt;
+
+&lt;img src="images/requete.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Aspirer] Comprendre la structure d'une URL
+
+&lt;center&gt;
+&lt;img src="images/url.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Aspirer] Comprendre la structure d'une URL
+
+&gt; https://en.wikipedia.org:80/wiki/List_of_Canadian_federal_general_elections
+
+--
+
+Au moins quatre éléments composent une URL
+
+1. un protocole `https://` 
+--
+
+2. un nom de domaine `en.wikipedia.org`
+--
+
+3. un port `:80`
+--
+
+4. un chemin vers le contenu spécifique `/wiki/List_of_Canadian_federal_general_elections`
+  
+---
+
+&lt;!-- google.com == http://google.com:80/index.html --&gt;
+
+### .fancy[Aspirer] avec &lt;img src="images/Rlogo.svg" style="display: inline-block; margin: 0"; width="30px"/&gt; et le package `{xml2}`
+
+#### Input
+
+.details[
+
+```r
+url &lt;- "https://en.wikipedia.org/wiki/List_of_Canadian_federal_general_elections"
+page &lt;- xml2::read_html(url)
+page
+```
+
+```
+#&gt; {html_document}
+#&gt; &lt;html class="client-nojs" lang="en" dir="ltr"&gt;
+#&gt; [1] &lt;head&gt;\n&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8 ...
+#&gt; [2] &lt;body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject  ...
+```
+]
+
+--
+&lt;br&gt;
+
+#### Output
+
+
+```r
+xml2::write_html(page, file = "test.html")
+# file.show("test.html")
+# browseURL("test.html")
+```
+
+---
+
+&lt;center&gt;
+&lt;h3&gt; .fancy[3 Extraire] .seventyfive[Raffiner les données avec `{rvest}`] &lt;/h3&gt; 
+
+&lt;img src="images/meme/rvest.jpeg" style="width: 80%"&gt;
+&lt;/center&gt;
+
+---
+
+#### .fancy[Exemple 2] .seventyfive[Extraire les noms, partis et liens des députés canadiens]
+
+&lt;center&gt; 
+&lt;a href = "https://www.noscommunes.ca/members/fr/constituencies"&gt;Exemple 2 &lt;/a&gt;
+&lt;img src="images/mp_screenshot.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Extraire] .seventyfive[Qu'est-ce qu'une page web?]
+
+&lt;center&gt;
+&lt;img src="images/html_css_js.png" style="width: 60%"&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Extraire] .seventyfive[Qu'est-ce qu'une page web?]
+
+Une page web a trois composantes principales: 
+--
+
+
+1. **HTML (Hyper Text Markup Language)** &lt;br&gt; prend en charge le contenu (textes, images, liens internes/externes)
+&lt;hr style="height:15px; visibility:hidden;" /&gt;
+--
+
+2. **CSS (Cascading Style Sheets)**  &lt;br&gt; définit l'apparence des éléments HTML
+&lt;hr style="height:15px; visibility:hidden;" /&gt;
+--
+
+3. **JS (Javascript)**  &lt;br&gt; modifie l'apparence/le contenu en fonction des interactions avec l'utilisateur
+
+---
+
+#### .fancy[Extraire] .seventyfive[Disséquer une page web avec les outils *developer*]
+
+&lt;center&gt; 
+
+&lt;a href = "https://www.noscommunes.ca/members/fr/constituencies"&gt; Example 2 &lt;/a&gt;
+
+&lt;img src="images/developer_tools.png" style="width: 80%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Extraire] .seventyfive[Une mosaïque d'éléments HTML]
+
+&lt;center&gt; 
+&lt;img src="images/html_element_example.png" style="width: 50%" /&gt;
+&lt;/center&gt;
+
+--
+
+Chaque élément HTML
+  * est délimité par des balises de début `&lt;tag&gt;` et de fin `&lt;/tag&gt;`
+--
+
+  * est charactérisé par des attributs insérés dans la balise de début (id, class, type, style, etc.)
+--
+
+  * peut contenir un ou plusieurs éléments enfants (dont il est le parent)
+  
+---
+
+### .fancy[Extraire] .seventyfive[Une mosaïque d'éléments HTML]
+
+&lt;center&gt; 
+&lt;img src="images/html_tree.png" style="width: 50%" /&gt;
+&lt;/center&gt;
+
+--
+
+
+Chaque page web peut être représentée comme une arborescence:
+--
+
+  * avec un sommet initial unique (document),
+--
+
+  * qui contient au moins deux enfants `head` et `body`
+  
+---
+
+### .fancy[Extraire] .seventyfive[Une mosaïque d'éléments HTML]
+
+&lt;center&gt; 
+&lt;img src="images/exemple_developer.png" style="width: 100%" /&gt;
+&lt;/center&gt;
+
+---
+
+
+### .fancy[Extraire] .seventyfive[Parcourir l'arborescence HTML avec `{rvest}`]
+
+1 Isoler l'élément contenant la donnée
+
+
+```r
+webpage &lt;- xml2::read_html(url)
+elem &lt;- isole_element(webpage, "id_of_the_element_of_containing_the_data")
+```
+
+--
+
+2 Extraire l'information
+
+
+```r
+value &lt;- extract_data(elem)
+```
+
+--
+
+&lt;center&gt; 
+&lt;img src="images/html_element_example.png" style="width: 50%" /&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Extraire] .seventyfive[Parcourir l'arborescence HTML avec `{rvest}`]
+
+#### .seventyfive[ 2 fonctions d'isolation]
+
+  + .seventyfive[`html_element(parent, sélecteur)` isole le premier élément enfant de l'élément `parent` correspondant à `sélecteur`]
+--
+
+  + .seventyfive[`html_elements(parent, sélecteur)` isole l'ensemble des éléments enfant de l'élément `parent` correspondant à `sélecteur`]
+  
+--
+
+#### .seventyfive[2 fonctions d'extraction]
+
+  + .seventyfive[`html_text(element)` extrait le texte de `element`]
+  
+--
+
+  + .seventyfive[`html_attr(element, attr)` extrait l'attribut `attr` de `element`]
+
+
+---
+
+### .fancy[Extraire] .seventyfive[isoler avec `rvest::html_element`]
+
+.seventyfive[`html_element(parent, sélecteur)` isole le premier élément enfant de l'élément `parent` correspondant à `sélecteur`]
+
+.details[
+
+```r
+page &lt;- xml2::read_html("https://www.noscommunes.ca/members/fr/constituencies")
+rvest::html_element(page, "body")
+```
+
+```
+#&gt; {html_node}
+#&gt; &lt;body class="body-wrapper ce-hoc vh-100"&gt;
+#&gt;  [1] &lt;header&gt;&lt;!-- Skip to Content --&gt;&lt;a href="#StartOfContent" class="ce-hoc- ...
+#&gt;  [2] &lt;nav id="ce-hoc-header" class="ce-hoc-nav navbar navbar-expand-lg navbar ...
+#&gt;  [3] &lt;a id="StartOfContent" class="sr-only" tabindex="-1"&gt;Début du contenu&lt;/a&gt;
+#&gt;  [4] &lt;main&gt;&lt;nav aria-label="Secondary menu"&gt;&lt;div class="ce-submenu"&gt;\r\n      ...
+#&gt;  [5] &lt;footer id="ce-hoc-footer" class="ce-hoc-footer hidden-print"&gt;&lt;div class ...
+#&gt;  [6] &lt;script src="/members/js/site.min.js?v=T-j8Lyczoqix_gsvzYQpltjUChEYTEjUv ...
+#&gt;  [7] &lt;script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min ...
+#&gt;  [8] &lt;script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4 ...
+#&gt;  [9] &lt;script&gt;\r\n    $(function () {\r\n        $('[data-toggle="tooltip"]'). ...
+#&gt; [10] &lt;script&gt;\r\n    $(function () {\r\n        //Set default DataTable behav ...
+#&gt; [11] &lt;script src="/members/js/Main/constituencies.min.js"&gt;&lt;/script&gt;
+#&gt; [12] &lt;script&gt;\n        $(function () {\n            /*script for the datatabl ...
+```
+]
+
+
+---
+
+### .fancy[Extraire] .seventyfive[isoler avec `rvest::html_element`]
+
+.seventyfive[`html_element(parent, sélecteur)` isole le premier élément enfant de l'élément `parent` correspondant à `sélecteur`]
+
+.details[
+
+```r
+rvest::html_element(page, "header")
+```
+
+```
+#&gt; {html_node}
+#&gt; &lt;header&gt;
+#&gt; [1] &lt;a href="#StartOfContent" class="ce-hoc-skipnav sr-only sr-only-focusable ...
+#&gt; [2] &lt;div id="ce-parl-header" class="ce-parl-header hidden-print"&gt;\n\t\t       ...
+```
+]
+
+---
+
+### .fancy[Extraire] .seventyfive[isoler avec `rvest::html_element`]
+
+.seventyfive[`html_element(parent, sélecteur)` isole le premier élément enfant de l'élément `parent` correspondant à `sélecteur`]
+
+.details[
+
+```r
+rvest::html_element(page, "[class='mip-mp-name']")
+```
+
+```
+#&gt; {html_node}
+#&gt; &lt;span class="mip-mp-name"&gt;
+```
+]
+
+.details[
+
+```r
+# Shortcut for class
+rvest::html_element(page, ".mip-mp-name")
+```
+
+```
+#&gt; {html_node}
+#&gt; &lt;span class="mip-mp-name"&gt;
+```
+]
+
+
+---
+
+### .fancy[Extraire] .seventyfive[isoler avec `rvest::html_elements`]
+
+.seventyfive[`html_elements(parent, sélecteur)` isole l'ensemble des éléments enfant de l'élément `parent` correspondant à `sélecteur`]
+
+.details[
+
+```r
+rvest::html_elements(page, "[class='mip-mp-name']")
+```
+
+```
+#&gt; {xml_nodeset (338)}
+#&gt;  [1] &lt;span class="mip-mp-name"&gt;Ed  Fast&lt;/span&gt;
+#&gt;  [2] &lt;span class="mip-mp-name"&gt;Sylvie  Bérubé&lt;/span&gt;
+#&gt;  [3] &lt;span class="mip-mp-name"&gt;Sébastien  Lemire&lt;/span&gt;
+#&gt;  [4] &lt;span class="mip-mp-name"&gt;Serge  Cormier&lt;/span&gt;
+#&gt;  [5] &lt;span class="mip-mp-name"&gt;Mélanie  Joly&lt;/span&gt;
+#&gt;  [6] &lt;span class="mip-mp-name"&gt;Mark  Holland&lt;/span&gt;
+#&gt;  [7] &lt;span class="mip-mp-name"&gt;Angelo  Iacono&lt;/span&gt;
+#&gt;  [8] &lt;span class="mip-mp-name"&gt;Carol  Hughes&lt;/span&gt;
+#&gt;  [9] &lt;span class="mip-mp-name"&gt;Stéphane  Lauzon&lt;/span&gt;
+#&gt; [10] &lt;span class="mip-mp-name"&gt;Leah  Taylor Roy&lt;/span&gt;
+#&gt; [11] &lt;span class="mip-mp-name"&gt;Ken  McDonald&lt;/span&gt;
+#&gt; [12] &lt;span class="mip-mp-name"&gt;Kristina  Michaud&lt;/span&gt;
+#&gt; [13] &lt;span class="mip-mp-name"&gt;Ryan  Williams&lt;/span&gt;
+#&gt; [14] &lt;span class="mip-mp-name"&gt;Blake  Richards&lt;/span&gt;
+#&gt; [15] &lt;span class="mip-mp-name"&gt;John  Brassard&lt;/span&gt;
+#&gt; [16] &lt;span class="mip-mp-name"&gt;Doug  Shipley&lt;/span&gt;
+#&gt; [17] &lt;span class="mip-mp-name"&gt;Damien C. Kurek&lt;/span&gt;
+#&gt; [18] &lt;span class="mip-mp-name"&gt;Rosemarie  Falk&lt;/span&gt;
+#&gt; [19] &lt;span class="mip-mp-name"&gt;Nathaniel  Erskine-Smith&lt;/span&gt;
+#&gt; [20] &lt;span class="mip-mp-name"&gt;Richard  Lehoux&lt;/span&gt;
+#&gt; ...
+```
+]
+
+---
+
+### .fancy[Extraire] .seventyfive[extraire le texte `rvest::html_text`]
+
+.seventyfive[`html_text(element)` extrait le texte de `element`]
+
+.details[
+
+```r
+# Isole l'ensemble des éléments dont la classe contient `mip-constituency-tile`
+mp_tuiles &lt;- rvest::html_elements(page, "[class='mip-mp-name']")
+# Pour chaque élément de l'ensemble, extrait l'attribut href
+rvest::html_text(mp_tuiles)
+```
+
+```
+#&gt;   [1] "Ed  Fast"                      "Sylvie  Bérubé"               
+#&gt;   [3] "Sébastien  Lemire"             "Serge  Cormier"               
+#&gt;   [5] "Mélanie  Joly"                 "Mark  Holland"                
+#&gt;   [7] "Angelo  Iacono"                "Carol  Hughes"                
+#&gt;   [9] "Stéphane  Lauzon"              "Leah  Taylor Roy"             
+#&gt;  [11] "Ken  McDonald"                 "Kristina  Michaud"            
+#&gt;  [13] "Ryan  Williams"                "Blake  Richards"              
+#&gt;  [15] "John  Brassard"                "Doug  Shipley"                
+#&gt;  [17] "Damien C. Kurek"               "Rosemarie  Falk"              
+#&gt;  [19] "Nathaniel  Erskine-Smith"      "Richard  Lehoux"              
+#&gt;  [21] "Caroline  Desbiens"            "Julie  Vignola"               
+#&gt;  [23] "Dominic  LeBlanc"              "Louis  Plamondon"             
+#&gt;  [25] "Dominique  Vien"               "Yves-François  Blanchet"      
+#&gt;  [27] "Yves  Perron"                  "Churence  Rogers"             
+#&gt;  [29] "Emmanuel  Dubourg"             "Martin  Shields"              
+#&gt;  [31] "Shafqat  Ali"                  "Maninder  Sidhu"              
+#&gt;  [33] "Ruby  Sahota"                  "Kamal  Khera"                 
+#&gt;  [35] "Sonia  Sidhu"                  "Larry  Maguire"               
+#&gt;  [37] "Larry  Brock"                  "Pascale  St-Onge"             
+#&gt;  [39] "Alexandra  Mendès"             "Alex  Ruff"                   
+#&gt;  [41] "Karina  Gould"                 "Terry  Beech"                 
+#&gt;  [43] "Jagmeet  Singh"                "Len  Webber"                  
+#&gt;  [45] "Jasraj Singh  Hallan"          "Bob  Benzen"                  
+#&gt;  [47] "Stephanie  Kusie"              "Michelle  Rempel Garner"      
+#&gt;  [49] "Pat  Kelly"                    "Tom  Kmiec"                   
+#&gt;  [51] "Ron  Liepert"                  "George  Chahal"               
+#&gt;  [53] "Greg  McLean"                  "Bryan  May"                   
+#&gt;  [55] "Mike  Kelloway"                "Lawrence  MacAulay"           
+#&gt;  [57] "Todd  Doherty"                 "Pierre  Poilievre"            
+#&gt;  [59] "Dan  Albas"                    "Pierre  Paul-Hus"             
+#&gt;  [61] "Marty  Morantz"                "Sean  Casey"                  
+#&gt;  [63] "Brenda  Shanahan"              "Dave  Epp"                    
+#&gt;  [65] "Richard  Martel"               "Mark  Strahl"                 
+#&gt;  [67] "Niki  Ashton"                  "John  Aldag"                  
+#&gt;  [69] "Clifford  Small"               "Marie-Claude  Bibeau"         
+#&gt;  [71] "Ron  McKinnon"                 "Gord  Johns"                  
+#&gt;  [73] "Alistair  MacGregor"           "Stephen  Ellis"               
+#&gt;  [75] "Jeremy  Patzer"                "Darren  Fisher"               
+#&gt;  [77] "Dan  Mazier"                   "Julie  Dzerowicz"             
+#&gt;  [79] "Carla  Qualtrough"             "Gary  Vidal"                  
+#&gt;  [81] "Michael  Coteau"               "Han  Dong"                    
+#&gt;  [83] "Robert  Oliphant"              "Anju  Dhillon"                
+#&gt;  [85] "Martin  Champoux"              "Kyle  Seeback"                
+#&gt;  [87] "Erin  O'Toole"                 "Blake  Desjarlais"            
+#&gt;  [89] "Ziad  Aboultaif"               "Tim  Uppal"                   
+#&gt;  [91] "Matt  Jeneroux"                "Heather  McPherson"           
+#&gt;  [93] "Randy  Boissonnault"           "Kelly  McCauley"              
+#&gt;  [95] "Mike  Lake"                    "Marco  Mendicino"             
+#&gt;  [97] "Robert J. Morrissey"           "Karen  Vecchio"               
+#&gt;  [99] "Daniel  Blaikie"               "Randall  Garrison"            
+#&gt; [101] "Chris  Lewis"                  "Yvan  Baker"                  
+#&gt; [103] "James  Maloney"                "Kirsty  Duncan"               
+#&gt; [105] "Dan  Muys"                     "Ken  Hardie"                  
+#&gt; [107] "John  Barlow"                  "Laila  Goodridge"             
+#&gt; [109] "Jenica  Atwin"                 "Rob  Moore"                   
+#&gt; [111] "Diane  Lebouthillier"          "Steven  MacKinnon"            
+#&gt; [113] "Francis  Drouin"               "Chris  Warkentin"             
+#&gt; [115] "Lloyd  Longfield"              "Leslyn  Lewis"                
+#&gt; [117] "Jamie  Schmale"                "Andy  Fillmore"               
+#&gt; [119] "Lena Metlege  Diab"            "Lisa  Hepfner"                
+#&gt; [121] "Matthew  Green"                "Chad  Collins"                
+#&gt; [123] "Filomena  Tassi"               "Shelby  Kramp-Neuman"         
+#&gt; [125] "Soraya  Martinez Ferrada"      "Pablo  Rodriguez"             
+#&gt; [127] "Greg  Fergus"                  "Judy A.  Sgro"                
+#&gt; [129] "Ben  Lobb"                     "Gabriel  Ste-Marie"           
+#&gt; [131] "Mario  Simard"                 "Frank  Caputo"                
+#&gt; [133] "Jenna  Sudds"                  "Tracy  Gray"                  
+#&gt; [135] "Eric  Melillo"                 "Raquel  Dancho"               
+#&gt; [137] "Kody  Blois"                   "Mark  Gerretsen"              
+#&gt; [139] "Anna  Roberts"                 "Mike  Morrice"                
+#&gt; [141] "Tim  Louis"                    "Valerie  Bradford"            
+#&gt; [143] "Rob  Morrison"                 "Mario  Beaulieu"              
+#&gt; [145] "Alain  Therrien"               "Yvonne  Jones"                
+#&gt; [147] "Alexis  Brunelle-Duceppe"      "Francis  Scarpaleggia"        
+#&gt; [149] "Shannon  Stubbs"               "Lianne  Rood"                 
+#&gt; [151] "Scott  Reid"                   "Tako  Van Popta"              
+#&gt; [153] "David  Lametti"                "Marie-Hélène  Gaudreau"       
+#&gt; [155] "Steven  Guilbeault"            "Fayçal  El-Khoury"            
+#&gt; [157] "Michael  Barrett"              "Rachael  Thomas"              
+#&gt; [159] "Jacques  Gourde"               "Peter  Fragiskatos"           
+#&gt; [161] "Lindsay  Mathyssen"            "Arielle  Kayabaga"            
+#&gt; [163] "Gudie  Hutchings"              "Sherry  Romanado"             
+#&gt; [165] "Denis  Trudel"                 "Joël  Lightbound"             
+#&gt; [167] "Gérard  Deltell"               "René  Arseneault"             
+#&gt; [169] "Heath  MacDonald"              "Marilène  Gill"               
+#&gt; [171] "Yves  Robillard"               "Helena  Jaczek"               
+#&gt; [173] "Mary  Ng"                      "Paul  Chiang"                 
+#&gt; [175] "Glen  Motz"                    "Luc  Berthold"                
+#&gt; [177] "Adam  van Koeverden"           "Jean-Denis  Garon"            
+#&gt; [179] "Jake  Stewart"                 "Brad  Vis"                    
+#&gt; [181] "Omar  Alghabra"                "Iqra  Khalid"                 
+#&gt; [183] "Peter  Fonseca"                "Sven  Spengemann"             
+#&gt; [185] "Iqwinder  Gaheer"              "Rechie  Valdez"               
+#&gt; [187] "Ginette  Petitpas Taylor"      "Stéphane  Bergeron"           
+#&gt; [189] "Luc  Thériault"                "Bernard  Généreux"            
+#&gt; [191] "Anthony  Housefather"          "Fraser  Tolmie"               
+#&gt; [193] "Lisa Marie  Barron"            "Chandra  Arya"                
+#&gt; [195] "Peter  Julian"                 "Tony  Van Bynen"              
+#&gt; [197] "Tony  Baldinelli"              "Vance  Badawey"               
+#&gt; [199] "Dean  Allison"                 "Marc G. Serré"                
+#&gt; [201] "Anthony  Rota"                 "Rachel  Blaney"               
+#&gt; [203] "Mel  Arnold"                   "Jonathan  Wilkinson"          
+#&gt; [205] "Philip  Lawrence"              "Marc  Garneau"                
+#&gt; [207] "John  Williamson"              "Sean  Fraser"                 
+#&gt; [209] "Chris  d'Entremont"            "Lori  Idlout"                 
+#&gt; [211] "Anita  Anand"                  "Pam  Damoff"                  
+#&gt; [213] "Richard  Cannings"             "Marie-France  Lalonde"        
+#&gt; [215] "Colin  Carrie"                 "Yasir  Naqvi"                 
+#&gt; [217] "Anita  Vandenbeld"             "David J. McGuinty"            
+#&gt; [219] "Mona  Fortier"                 "Rachel  Bendayan"             
+#&gt; [221] "Dave  MacKenzie"               "Justin  Trudeau"              
+#&gt; [223] "Arif  Virani"                  "Scott  Aitchison"             
+#&gt; [225] "Arnold  Viersen"               "John  Nater"                  
+#&gt; [227] "Michelle  Ferreri"             "Jennifer  O'Connell"          
+#&gt; [229] "Xavier  Barsalou-Duval"        "Sameer  Zuberi"               
+#&gt; [231] "Marc  Dalton"                  "Sophie  Chatel"               
+#&gt; [233] "Bonita  Zarrillo"              "Candice  Bergen"              
+#&gt; [235] "Joël  Godin"                   "Randy  Hoback"                
+#&gt; [237] "Bob  Zimmer"                   "Ted  Falk"                    
+#&gt; [239] "Jean-Yves  Duclos"             "Blaine  Calkins"              
+#&gt; [241] "Earl  Dreeshen"                "Warren  Steinley"             
+#&gt; [243] "Andrew  Scheer"                "Michael  Kram"                
+#&gt; [245] "Cheryl  Gallant"               "Monique  Pauzé"               
+#&gt; [247] "Majid  Jowhari"                "Alain  Rayes"                 
+#&gt; [249] "Wilson  Miao"                  "Maxime  Blanchette-Joncas"    
+#&gt; [251] "Luc  Desilets"                 "Rhéal Éloi Fortin"            
+#&gt; [253] "Alexandre  Boulerice"          "Elizabeth  May"               
+#&gt; [255] "Darrell  Samson"               "Wayne  Long"                  
+#&gt; [257] "Dan  Vandal"                   "Simon-Pierre  Savard-Tremblay"
+#&gt; [259] "Christine  Normandin"          "Emmanuella  Lambropoulos"     
+#&gt; [261] "Patricia  Lattanzio"           "François-Philippe  Champagne" 
+#&gt; [263] "Claude  DeBellefeuille"        "Marilyn  Gladu"               
+#&gt; [265] "Kevin  Waugh"                  "Brad  Redekopp"               
+#&gt; [267] "Corey  Tochor"                 "Terry  Sheehan"               
+#&gt; [269] "Jean  Yip"                     "Salma  Zahid"                 
+#&gt; [271] "John  McKay"                   "Shaun  Chen"                  
+#&gt; [273] "Gary  Anandasangaree"          "Bill  Blair"                  
+#&gt; [275] "James  Bezan"                  "Kelly  Block"                 
+#&gt; [277] "Andréanne  Larouche"           "Élisabeth  Brière"            
+#&gt; [279] "Garnett  Genuis"               "Terry  Dowdall"               
+#&gt; [281] "Adam  Chambers"                "Taylor  Bachrach"             
+#&gt; [283] "Robert  Kitchen"               "Rick  Perkins"                
+#&gt; [285] "Kevin  Vuong"                  "Michael  Cooper"              
+#&gt; [287] "Chris  Bittle"                 "Joanne  Thompson"             
+#&gt; [289] "Seamus  O'Regan"               "Parm  Bains"                  
+#&gt; [291] "Eric  Duncan"                  "Dane  Lloyd"                  
+#&gt; [293] "Viviane  Lapointe"             "Randeep  Sarai"               
+#&gt; [295] "Sukh  Dhaliwal"                "Kerry-Lynne D. Findlay"       
+#&gt; [297] "Jaime  Battiste"               "Nathalie  Sinclair-Desgagné"  
+#&gt; [299] "Michael V. McLeod"             "Louise  Chabot"               
+#&gt; [301] "Melissa  Lantsman"             "Marcus  Powlowski"            
+#&gt; [303] "Patty  Hajdu"                  "Charlie  Angus"               
+#&gt; [305] "Richard  Bragdon"              "Marci  Ien"                   
+#&gt; [307] "Julie  Dabrusin"               "Carolyn  Bennett"             
+#&gt; [309] "René  Villemure"               "Chrystia  Freeland"           
+#&gt; [311] "Taleeb  Noormohamed"           "Don  Davies"                  
+#&gt; [313] "Joyce  Murray"                 "Hedy  Fry"                    
+#&gt; [315] "Jenny  Kwan"                   "Harjit S.  Sajjan"            
+#&gt; [317] "Peter  Schiefke"               "Francesco  Sorbara"           
+#&gt; [319] "Laurel  Collins"               "Marc  Miller"                 
+#&gt; [321] "Annie  Koutrakis"              "Bardish  Chagger"             
+#&gt; [323] "Michael D. Chong"              "Patrick  Weiler"              
+#&gt; [325] "Ryan  Turnbull"                "Ali  Ehsassi"                 
+#&gt; [327] "Brian  Masse"                  "Irek  Kusmierczyk"            
+#&gt; [329] "Leah  Gazan"                   "Jim  Carr"                    
+#&gt; [331] "Kevin  Lamoureux"              "Terry  Duguid"                
+#&gt; [333] "Gerald  Soroka"                "Ya'ara  Saks"                 
+#&gt; [335] "Scot  Davidson"                "Ahmed  Hussen"                
+#&gt; [337] "Cathay  Wagantall"             "Brendan  Hanley"
+```
+]
+---
+
+### .fancy[Extraire] .seventyfive[extraire des attributs avec `rvest::html_attr`]
+
+.seventyfive[`html_attr(element, attr)` extrait l'attribut `attr` de `element`]
+
+.details[
+
+```r
+# Isole l'ensemble des éléments dont la classe contient `mip-constituency-tile`
+mp_tuiles &lt;- rvest::html_elements(page, "[class='mip-constituency-tile']")
+# Pour chaque élément de l'ensemble, extrait l'attribut href
+rvest::html_attr(mp_tuiles, "href")
+```
+
+```
+#&gt;   [1] "/members/fr/constituencies/abbotsford(898)"                                       
+#&gt;   [2] "/members/fr/constituencies/abitibi-baie-james-nunavik-eeyou(637)"                 
+#&gt;   [3] "/members/fr/constituencies/abitibi-temiscamingue(638)"                            
+#&gt;   [4] "/members/fr/constituencies/acadie-bathurst(627)"                                  
+#&gt;   [5] "/members/fr/constituencies/ahuntsic-cartierville(639)"                            
+#&gt;   [6] "/members/fr/constituencies/ajax(715)"                                             
+#&gt;   [7] "/members/fr/constituencies/alfred-pellan(640)"                                    
+#&gt;   [8] "/members/fr/constituencies/algoma-manitoulin-kapuskasing(716)"                    
+#&gt;   [9] "/members/fr/constituencies/argenteuil-la-petite-nation(641)"                      
+#&gt;  [10] "/members/fr/constituencies/aurora-oak-ridges-richmond-hill(717)"                  
+#&gt;  [11] "/members/fr/constituencies/avalon(605)"                                           
+#&gt;  [12] "/members/fr/constituencies/avignon-la-mitis-matane-matapedia(642)"                
+#&gt;  [13] "/members/fr/constituencies/bay-of-quinte(720)"                                    
+#&gt;  [14] "/members/fr/constituencies/banff-airdrie(864)"                                    
+#&gt;  [15] "/members/fr/constituencies/barrie-innisfil(718)"                                  
+#&gt;  [16] "/members/fr/constituencies/barrie-springwater-oro-medonte(719)"                   
+#&gt;  [17] "/members/fr/constituencies/battle-river-crowfoot(865)"                            
+#&gt;  [18] "/members/fr/constituencies/battlefords-lloydminster(850)"                         
+#&gt;  [19] "/members/fr/constituencies/beaches-east-york(721)"                                
+#&gt;  [20] "/members/fr/constituencies/beauce(643)"                                           
+#&gt;  [21] "/members/fr/constituencies/beauport-cote-de-beaupre-ile-dorleans-charlevoix(656)" 
+#&gt;  [22] "/members/fr/constituencies/beauport-limoilou(644)"                                
+#&gt;  [23] "/members/fr/constituencies/beausejour(628)"                                       
+#&gt;  [24] "/members/fr/constituencies/becancour-nicolet-saurel(645)"                         
+#&gt;  [25] "/members/fr/constituencies/bellechasse-les-etchemins-levis(646)"                  
+#&gt;  [26] "/members/fr/constituencies/beloeil-chambly(647)"                                  
+#&gt;  [27] "/members/fr/constituencies/berthier-maskinonge(648)"                              
+#&gt;  [28] "/members/fr/constituencies/bonavista-burin-trinity(606)"                          
+#&gt;  [29] "/members/fr/constituencies/bourassa(651)"                                         
+#&gt;  [30] "/members/fr/constituencies/bow-river(866)"                                        
+#&gt;  [31] "/members/fr/constituencies/brampton-centre(722)"                                  
+#&gt;  [32] "/members/fr/constituencies/brampton-east(723)"                                    
+#&gt;  [33] "/members/fr/constituencies/brampton-north(724)"                                   
+#&gt;  [34] "/members/fr/constituencies/brampton-west(726)"                                    
+#&gt;  [35] "/members/fr/constituencies/brampton-south(725)"                                   
+#&gt;  [36] "/members/fr/constituencies/brandon-souris(836)"                                   
+#&gt;  [37] "/members/fr/constituencies/brantford-brant(727)"                                  
+#&gt;  [38] "/members/fr/constituencies/brome-missisquoi(652)"                                 
+#&gt;  [39] "/members/fr/constituencies/brossard-saint-lambert(653)"                           
+#&gt;  [40] "/members/fr/constituencies/bruce-grey-owen-sound(728)"                            
+#&gt;  [41] "/members/fr/constituencies/burlington(729)"                                       
+#&gt;  [42] "/members/fr/constituencies/burnaby-north-seymour(899)"                            
+#&gt;  [43] "/members/fr/constituencies/burnaby-south(900)"                                    
+#&gt;  [44] "/members/fr/constituencies/calgary-confederation(868)"                            
+#&gt;  [45] "/members/fr/constituencies/calgary-forest-lawn(869)"                              
+#&gt;  [46] "/members/fr/constituencies/calgary-heritage(870)"                                 
+#&gt;  [47] "/members/fr/constituencies/calgary-midnapore(871)"                                
+#&gt;  [48] "/members/fr/constituencies/calgary-nose-hill(872)"                                
+#&gt;  [49] "/members/fr/constituencies/calgary-rocky-ridge(873)"                              
+#&gt;  [50] "/members/fr/constituencies/calgary-shepard(874)"                                  
+#&gt;  [51] "/members/fr/constituencies/calgary-signal-hill(875)"                              
+#&gt;  [52] "/members/fr/constituencies/calgary-skyview(876)"                                  
+#&gt;  [53] "/members/fr/constituencies/calgary-centre(867)"                                   
+#&gt;  [54] "/members/fr/constituencies/cambridge(730)"                                        
+#&gt;  [55] "/members/fr/constituencies/cape-breton-canso(616)"                                
+#&gt;  [56] "/members/fr/constituencies/cardigan(612)"                                         
+#&gt;  [57] "/members/fr/constituencies/cariboo-prince-george(901)"                            
+#&gt;  [58] "/members/fr/constituencies/carleton(802)"                                         
+#&gt;  [59] "/members/fr/constituencies/central-okanagan-similkameen-nicola(902)"              
+#&gt;  [60] "/members/fr/constituencies/charlesbourg-haute-saint-charles(655)"                 
+#&gt;  [61] "/members/fr/constituencies/charleswood-st-james-assiniboia-headingley(837)"       
+#&gt;  [62] "/members/fr/constituencies/charlottetown(613)"                                    
+#&gt;  [63] "/members/fr/constituencies/chateauguay-lacolle(657)"                              
+#&gt;  [64] "/members/fr/constituencies/chatham-kent-leamington(731)"                          
+#&gt;  [65] "/members/fr/constituencies/chicoutimi-le-fjord(658)"                              
+#&gt;  [66] "/members/fr/constituencies/chilliwack-hope(903)"                                  
+#&gt;  [67] "/members/fr/constituencies/churchill-keewatinook-aski(838)"                       
+#&gt;  [68] "/members/fr/constituencies/cloverdale-langley-city(904)"                          
+#&gt;  [69] "/members/fr/constituencies/coast-of-bays-central-notre-dame(607)"                 
+#&gt;  [70] "/members/fr/constituencies/compton-stanstead(659)"                                
+#&gt;  [71] "/members/fr/constituencies/coquitlam-port-coquitlam(905)"                         
+#&gt;  [72] "/members/fr/constituencies/courtenay-alberni(906)"                                
+#&gt;  [73] "/members/fr/constituencies/cowichan-malahat-langford(907)"                        
+#&gt;  [74] "/members/fr/constituencies/cumberland-colchester(618)"                            
+#&gt;  [75] "/members/fr/constituencies/cypress-hills-grasslands(851)"                         
+#&gt;  [76] "/members/fr/constituencies/dartmouth-cole-harbour(619)"                           
+#&gt;  [77] "/members/fr/constituencies/dauphin-swan-river-neepawa(839)"                       
+#&gt;  [78] "/members/fr/constituencies/davenport(732)"                                        
+#&gt;  [79] "/members/fr/constituencies/delta(908)"                                            
+#&gt;  [80] "/members/fr/constituencies/desnethe-missinippi-churchill-river(852)"              
+#&gt;  [81] "/members/fr/constituencies/don-valley-east(733)"                                  
+#&gt;  [82] "/members/fr/constituencies/don-valley-north(734)"                                 
+#&gt;  [83] "/members/fr/constituencies/don-valley-west(735)"                                  
+#&gt;  [84] "/members/fr/constituencies/dorval-lachine-lasalle(660)"                           
+#&gt;  [85] "/members/fr/constituencies/drummond(661)"                                         
+#&gt;  [86] "/members/fr/constituencies/dufferin-caledon(736)"                                 
+#&gt;  [87] "/members/fr/constituencies/durham(737)"                                           
+#&gt;  [88] "/members/fr/constituencies/edmonton-griesbach(878)"                               
+#&gt;  [89] "/members/fr/constituencies/edmonton-manning(879)"                                 
+#&gt;  [90] "/members/fr/constituencies/edmonton-mill-woods(880)"                              
+#&gt;  [91] "/members/fr/constituencies/edmonton-riverbend(881)"                               
+#&gt;  [92] "/members/fr/constituencies/edmonton-strathcona(882)"                              
+#&gt;  [93] "/members/fr/constituencies/edmonton-centre(877)"                                  
+#&gt;  [94] "/members/fr/constituencies/edmonton-west(883)"                                    
+#&gt;  [95] "/members/fr/constituencies/edmonton-wetaskiwin(884)"                              
+#&gt;  [96] "/members/fr/constituencies/eglinton-lawrence(738)"                                
+#&gt;  [97] "/members/fr/constituencies/egmont(614)"                                           
+#&gt;  [98] "/members/fr/constituencies/elgin-middlesex-london(739)"                           
+#&gt;  [99] "/members/fr/constituencies/elmwood-transcona(840)"                                
+#&gt; [100] "/members/fr/constituencies/esquimalt-saanich-sooke(923)"                          
+#&gt; [101] "/members/fr/constituencies/essex(740)"                                            
+#&gt; [102] "/members/fr/constituencies/etobicoke-centre(741)"                                 
+#&gt; [103] "/members/fr/constituencies/etobicoke-lakeshore(742)"                              
+#&gt; [104] "/members/fr/constituencies/etobicoke-north(743)"                                  
+#&gt; [105] "/members/fr/constituencies/flamborough-glanbrook(744)"                            
+#&gt; [106] "/members/fr/constituencies/fleetwood-port-kells(909)"                             
+#&gt; [107] "/members/fr/constituencies/foothills(885)"                                        
+#&gt; [108] "/members/fr/constituencies/fort-mcmurray-cold-lake(886)"                          
+#&gt; [109] "/members/fr/constituencies/fredericton(629)"                                      
+#&gt; [110] "/members/fr/constituencies/fundy-royal(630)"                                      
+#&gt; [111] "/members/fr/constituencies/gaspesie-les-iles-de-la-madeleine(662)"                
+#&gt; [112] "/members/fr/constituencies/gatineau(663)"                                         
+#&gt; [113] "/members/fr/constituencies/glengarry-prescott-russell(745)"                       
+#&gt; [114] "/members/fr/constituencies/grande-prairie-mackenzie(887)"                         
+#&gt; [115] "/members/fr/constituencies/guelph(746)"                                           
+#&gt; [116] "/members/fr/constituencies/haldimand-norfolk(747)"                                
+#&gt; [117] "/members/fr/constituencies/haliburton-kawartha-lakes-brock(748)"                  
+#&gt; [118] "/members/fr/constituencies/halifax(620)"                                          
+#&gt; [119] "/members/fr/constituencies/halifax-west(621)"                                     
+#&gt; [120] "/members/fr/constituencies/hamilton-mountain(751)"                                
+#&gt; [121] "/members/fr/constituencies/hamilton-centre(749)"                                  
+#&gt; [122] "/members/fr/constituencies/hamilton-east-stoney-creek(750)"                       
+#&gt; [123] "/members/fr/constituencies/hamilton-west-ancaster-dundas(752)"                    
+#&gt; [124] "/members/fr/constituencies/hastings-lennox-and-addington(753)"                    
+#&gt; [125] "/members/fr/constituencies/hochelaga(664)"                                        
+#&gt; [126] "/members/fr/constituencies/honore-mercier(665)"                                   
+#&gt; [127] "/members/fr/constituencies/hull-aylmer(666)"                                      
+#&gt; [128] "/members/fr/constituencies/humber-river-black-creek(835)"                         
+#&gt; [129] "/members/fr/constituencies/huron-bruce(754)"                                      
+#&gt; [130] "/members/fr/constituencies/joliette(667)"                                         
+#&gt; [131] "/members/fr/constituencies/jonquiere(668)"                                        
+#&gt; [132] "/members/fr/constituencies/kamloops-thompson-cariboo(910)"                        
+#&gt; [133] "/members/fr/constituencies/kanata-carleton(755)"                                  
+#&gt; [134] "/members/fr/constituencies/kelowna-lake-country(911)"                             
+#&gt; [135] "/members/fr/constituencies/kenora(756)"                                           
+#&gt; [136] "/members/fr/constituencies/kildonan-st-paul(841)"                                 
+#&gt; [137] "/members/fr/constituencies/kings-hants(622)"                                      
+#&gt; [138] "/members/fr/constituencies/kingston-and-the-islands(758)"                         
+#&gt; [139] "/members/fr/constituencies/king-vaughan(757)"                                     
+#&gt; [140] "/members/fr/constituencies/kitchener-centre(759)"                                 
+#&gt; [141] "/members/fr/constituencies/kitchener-conestoga(760)"                              
+#&gt; [142] "/members/fr/constituencies/kitchener-south-hespeler(761)"                         
+#&gt; [143] "/members/fr/constituencies/kootenay-columbia(912)"                                
+#&gt; [144] "/members/fr/constituencies/la-pointe-de-lile(669)"                                
+#&gt; [145] "/members/fr/constituencies/la-prairie(670)"                                       
+#&gt; [146] "/members/fr/constituencies/labrador(608)"                                         
+#&gt; [147] "/members/fr/constituencies/lac-saint-jean(671)"                                   
+#&gt; [148] "/members/fr/constituencies/lac-saint-louis(672)"                                  
+#&gt; [149] "/members/fr/constituencies/lakeland(888)"                                         
+#&gt; [150] "/members/fr/constituencies/lambton-kent-middlesex(762)"                           
+#&gt; [151] "/members/fr/constituencies/lanark-frontenac-kingston(763)"                        
+#&gt; [152] "/members/fr/constituencies/langley-aldergrove(913)"                               
+#&gt; [153] "/members/fr/constituencies/lasalle-emard-verdun(673)"                             
+#&gt; [154] "/members/fr/constituencies/laurentides-labelle(674)"                              
+#&gt; [155] "/members/fr/constituencies/laurier-sainte-marie(675)"                             
+#&gt; [156] "/members/fr/constituencies/laval-les-iles(676)"                                   
+#&gt; [157] "/members/fr/constituencies/leeds-grenville-thousand-islands-and-rideau-lakes(764)"
+#&gt; [158] "/members/fr/constituencies/lethbridge(889)"                                       
+#&gt; [159] "/members/fr/constituencies/levis-lotbiniere(678)"                                 
+#&gt; [160] "/members/fr/constituencies/london-north-centre(766)"                              
+#&gt; [161] "/members/fr/constituencies/london-fanshawe(765)"                                  
+#&gt; [162] "/members/fr/constituencies/london-west(767)"                                      
+#&gt; [163] "/members/fr/constituencies/long-range-mountains(609)"                             
+#&gt; [164] "/members/fr/constituencies/longueuil-charles-lemoyne(677)"                        
+#&gt; [165] "/members/fr/constituencies/longueuil-saint-hubert(679)"                           
+#&gt; [166] "/members/fr/constituencies/louis-hebert(680)"                                     
+#&gt; [167] "/members/fr/constituencies/louis-saint-laurent(681)"                              
+#&gt; [168] "/members/fr/constituencies/madawaska-restigouche(631)"                            
+#&gt; [169] "/members/fr/constituencies/malpeque(615)"                                         
+#&gt; [170] "/members/fr/constituencies/manicouagan(682)"                                      
+#&gt; [171] "/members/fr/constituencies/marc-aurele-fortin(701)"                               
+#&gt; [172] "/members/fr/constituencies/markham-stouffville(768)"                              
+#&gt; [173] "/members/fr/constituencies/markham-thornhill(769)"                                
+#&gt; [174] "/members/fr/constituencies/markham-unionville(770)"                               
+#&gt; [175] "/members/fr/constituencies/medicine-hat-cardston-warner(890)"                     
+#&gt; [176] "/members/fr/constituencies/megantic-lerable(683)"                                 
+#&gt; [177] "/members/fr/constituencies/milton(771)"                                           
+#&gt; [178] "/members/fr/constituencies/mirabel(684)"                                          
+#&gt; [179] "/members/fr/constituencies/miramichi-grand-lake(632)"                             
+#&gt; [180] "/members/fr/constituencies/mission-matsqui-fraser-canyon(914)"                    
+#&gt; [181] "/members/fr/constituencies/mississauga-centre(772)"                               
+#&gt; [182] "/members/fr/constituencies/mississauga-erin-mills(774)"                           
+#&gt; [183] "/members/fr/constituencies/mississauga-east-cooksville(773)"                      
+#&gt; [184] "/members/fr/constituencies/mississauga-lakeshore(775)"                            
+#&gt; [185] "/members/fr/constituencies/mississauga-malton(776)"                               
+#&gt; [186] "/members/fr/constituencies/mississauga-streetsville(777)"                         
+#&gt; [187] "/members/fr/constituencies/moncton-riverview-dieppe(633)"                         
+#&gt; [188] "/members/fr/constituencies/montarville(685)"                                      
+#&gt; [189] "/members/fr/constituencies/montcalm(686)"                                         
+#&gt; [190] "/members/fr/constituencies/montmagny-lislet-kamouraska-riviere-du-loup(687)"      
+#&gt; [191] "/members/fr/constituencies/mount-royal(688)"                                      
+#&gt; [192] "/members/fr/constituencies/moose-jaw-lake-centre-lanigan(854)"                    
+#&gt; [193] "/members/fr/constituencies/nanaimo-ladysmith(915)"                                
+#&gt; [194] "/members/fr/constituencies/nepean(778)"                                           
+#&gt; [195] "/members/fr/constituencies/new-westminster-burnaby(916)"                          
+#&gt; [196] "/members/fr/constituencies/newmarket-aurora(779)"                                 
+#&gt; [197] "/members/fr/constituencies/niagara-falls(781)"                                    
+#&gt; [198] "/members/fr/constituencies/niagara-centre(780)"                                   
+#&gt; [199] "/members/fr/constituencies/niagara-west(782)"                                     
+#&gt; [200] "/members/fr/constituencies/nickel-belt(783)"                                      
+#&gt; [201] "/members/fr/constituencies/nipissing-timiskaming(784)"                            
+#&gt; [202] "/members/fr/constituencies/north-island-powell-river(934)"                        
+#&gt; [203] "/members/fr/constituencies/north-okanagan-shuswap(917)"                           
+#&gt; [204] "/members/fr/constituencies/north-vancouver(918)"                                  
+#&gt; [205] "/members/fr/constituencies/northumberland-peterborough-south(785)"                
+#&gt; [206] "/members/fr/constituencies/notre-dame-de-grace-westmount(689)"                    
+#&gt; [207] "/members/fr/constituencies/new-brunswick-southwest(634)"                          
+#&gt; [208] "/members/fr/constituencies/central-nova(617)"                                     
+#&gt; [209] "/members/fr/constituencies/west-nova(626)"                                        
+#&gt; [210] "/members/fr/constituencies/nunavut(942)"                                          
+#&gt; [211] "/members/fr/constituencies/oakville(786)"                                         
+#&gt; [212] "/members/fr/constituencies/oakville-north-burlington(787)"                        
+#&gt; [213] "/members/fr/constituencies/south-okanagan-west-kootenay(926)"                     
+#&gt; [214] "/members/fr/constituencies/orleans(790)"                                          
+#&gt; [215] "/members/fr/constituencies/oshawa(788)"                                           
+#&gt; [216] "/members/fr/constituencies/ottawa-centre(789)"                                    
+#&gt; [217] "/members/fr/constituencies/ottawa-west-nepean(793)"                               
+#&gt; [218] "/members/fr/constituencies/ottawa-south(791)"                                     
+#&gt; [219] "/members/fr/constituencies/ottawa-vanier(792)"                                    
+#&gt; [220] "/members/fr/constituencies/outremont(690)"                                        
+#&gt; [221] "/members/fr/constituencies/oxford(794)"                                           
+#&gt; [222] "/members/fr/constituencies/papineau(691)"                                         
+#&gt; [223] "/members/fr/constituencies/parkdale-high-park(795)"                               
+#&gt; [224] "/members/fr/constituencies/parry-sound-muskoka(796)"                              
+#&gt; [225] "/members/fr/constituencies/peace-river-westlock(891)"                             
+#&gt; [226] "/members/fr/constituencies/perth-wellington(797)"                                 
+#&gt; [227] "/members/fr/constituencies/peterborough-kawartha(798)"                            
+#&gt; [228] "/members/fr/constituencies/pickering-uxbridge(799)"                               
+#&gt; [229] "/members/fr/constituencies/pierre-boucher-les-patriotes-vercheres(650)"           
+#&gt; [230] "/members/fr/constituencies/pierrefonds-dollard(692)"                              
+#&gt; [231] "/members/fr/constituencies/pitt-meadows-maple-ridge(919)"                         
+#&gt; [232] "/members/fr/constituencies/pontiac(693)"                                          
+#&gt; [233] "/members/fr/constituencies/port-moody-coquitlam(920)"                             
+#&gt; [234] "/members/fr/constituencies/portage-lisgar(842)"                                   
+#&gt; [235] "/members/fr/constituencies/portneuf-jacques-cartier(694)"                         
+#&gt; [236] "/members/fr/constituencies/prince-albert(855)"                                    
+#&gt; [237] "/members/fr/constituencies/prince-george-peace-river-northern-rockies(921)"       
+#&gt; [238] "/members/fr/constituencies/provencher(843)"                                       
+#&gt; [239] "/members/fr/constituencies/quebec(695)"                                           
+#&gt; [240] "/members/fr/constituencies/red-deer-lacombe(893)"                                 
+#&gt; [241] "/members/fr/constituencies/red-deer-mountain-view(892)"                           
+#&gt; [242] "/members/fr/constituencies/regina-lewvan(856)"                                    
+#&gt; [243] "/members/fr/constituencies/regina-quappelle(857)"                                 
+#&gt; [244] "/members/fr/constituencies/regina-wascana(858)"                                   
+#&gt; [245] "/members/fr/constituencies/renfrew-nipissing-pembroke(800)"                       
+#&gt; [246] "/members/fr/constituencies/repentigny(696)"                                       
+#&gt; [247] "/members/fr/constituencies/richmond-hill(801)"                                    
+#&gt; [248] "/members/fr/constituencies/richmond-arthabaska(697)"                              
+#&gt; [249] "/members/fr/constituencies/richmond-centre(922)"                                  
+#&gt; [250] "/members/fr/constituencies/rimouski-neigette-temiscouata-les-basques(654)"        
+#&gt; [251] "/members/fr/constituencies/riviere-des-mille-iles(698)"                           
+#&gt; [252] "/members/fr/constituencies/riviere-du-nord(699)"                                  
+#&gt; [253] "/members/fr/constituencies/rosemont-la-petite-patrie(700)"                        
+#&gt; [254] "/members/fr/constituencies/saanich-gulf-islands(924)"                             
+#&gt; [255] "/members/fr/constituencies/sackville-preston-chezzetcook(623)"                    
+#&gt; [256] "/members/fr/constituencies/saint-john-rothesay(635)"                              
+#&gt; [257] "/members/fr/constituencies/saint-boniface-saint-vital(844)"                       
+#&gt; [258] "/members/fr/constituencies/saint-hyacinthe-bagot(702)"                            
+#&gt; [259] "/members/fr/constituencies/saint-jean(703)"                                       
+#&gt; [260] "/members/fr/constituencies/saint-laurent(704)"                                    
+#&gt; [261] "/members/fr/constituencies/saint-leonard-saint-michel(705)"                       
+#&gt; [262] "/members/fr/constituencies/saint-maurice-champlain(706)"                          
+#&gt; [263] "/members/fr/constituencies/salaberry-suroit(707)"                                 
+#&gt; [264] "/members/fr/constituencies/sarnia-lambton(805)"                                   
+#&gt; [265] "/members/fr/constituencies/saskatoon-grasswood(859)"                              
+#&gt; [266] "/members/fr/constituencies/saskatoon-west(861)"                                   
+#&gt; [267] "/members/fr/constituencies/saskatoon-university(860)"                             
+#&gt; [268] "/members/fr/constituencies/sault-ste-marie(806)"                                  
+#&gt; [269] "/members/fr/constituencies/scarborough-agincourt(807)"                            
+#&gt; [270] "/members/fr/constituencies/scarborough-centre(808)"                               
+#&gt; [271] "/members/fr/constituencies/scarborough-guildwood(809)"                            
+#&gt; [272] "/members/fr/constituencies/scarborough-north(810)"                                
+#&gt; [273] "/members/fr/constituencies/scarborough-rouge-park(811)"                           
+#&gt; [274] "/members/fr/constituencies/scarborough-southwest(812)"                            
+#&gt; [275] "/members/fr/constituencies/selkirk-interlake-eastman(845)"                        
+#&gt; [276] "/members/fr/constituencies/carlton-trail-eagle-creek(853)"                        
+#&gt; [277] "/members/fr/constituencies/shefford(708)"                                         
+#&gt; [278] "/members/fr/constituencies/sherbrooke(709)"                                       
+#&gt; [279] "/members/fr/constituencies/sherwood-park-fort-saskatchewan(895)"                  
+#&gt; [280] "/members/fr/constituencies/simcoe-grey(813)"                                      
+#&gt; [281] "/members/fr/constituencies/simcoe-north(814)"                                     
+#&gt; [282] "/members/fr/constituencies/skeena-bulkley-valley(925)"                            
+#&gt; [283] "/members/fr/constituencies/souris-moose-mountain(862)"                            
+#&gt; [284] "/members/fr/constituencies/south-shore-st-margarets(624)"                         
+#&gt; [285] "/members/fr/constituencies/spadina-fort-york(815)"                                
+#&gt; [286] "/members/fr/constituencies/st-albert-edmonton(894)"                               
+#&gt; [287] "/members/fr/constituencies/st-catharines(803)"                                    
+#&gt; [288] "/members/fr/constituencies/st-johns-east(610)"                                    
+#&gt; [289] "/members/fr/constituencies/st-johns-south-mount-pearl(611)"                       
+#&gt; [290] "/members/fr/constituencies/steveston-richmond-east(928)"                          
+#&gt; [291] "/members/fr/constituencies/stormont-dundas-south-glengarry(816)"                  
+#&gt; [292] "/members/fr/constituencies/sturgeon-river-parkland(896)"                          
+#&gt; [293] "/members/fr/constituencies/sudbury(817)"                                          
+#&gt; [294] "/members/fr/constituencies/surrey-centre(929)"                                    
+#&gt; [295] "/members/fr/constituencies/surrey-newton(930)"                                    
+#&gt; [296] "/members/fr/constituencies/south-surrey-white-rock(927)"                          
+#&gt; [297] "/members/fr/constituencies/sydney-victoria(625)"                                  
+#&gt; [298] "/members/fr/constituencies/terrebonne(711)"                                       
+#&gt; [299] "/members/fr/constituencies/northwest-territories(941)"                            
+#&gt; [300] "/members/fr/constituencies/therese-de-blainville(649)"                            
+#&gt; [301] "/members/fr/constituencies/thornhill(818)"                                        
+#&gt; [302] "/members/fr/constituencies/thunder-bay-rainy-river(819)"                          
+#&gt; [303] "/members/fr/constituencies/thunder-bay-superior-north(820)"                       
+#&gt; [304] "/members/fr/constituencies/timmins-james-bay(821)"                                
+#&gt; [305] "/members/fr/constituencies/tobique-mactaquac(636)"                                
+#&gt; [306] "/members/fr/constituencies/toronto-centre(822)"                                   
+#&gt; [307] "/members/fr/constituencies/toronto-danforth(823)"                                 
+#&gt; [308] "/members/fr/constituencies/toronto-st-pauls(804)"                                 
+#&gt; [309] "/members/fr/constituencies/trois-rivieres(712)"                                   
+#&gt; [310] "/members/fr/constituencies/university-rosedale(824)"                              
+#&gt; [311] "/members/fr/constituencies/vancouver-granville(933)"                              
+#&gt; [312] "/members/fr/constituencies/vancouver-kingsway(935)"                               
+#&gt; [313] "/members/fr/constituencies/vancouver-quadra(936)"                                 
+#&gt; [314] "/members/fr/constituencies/vancouver-centre(931)"                                 
+#&gt; [315] "/members/fr/constituencies/vancouver-east(932)"                                   
+#&gt; [316] "/members/fr/constituencies/vancouver-south(937)"                                  
+#&gt; [317] "/members/fr/constituencies/vaudreuil-soulanges(710)"                              
+#&gt; [318] "/members/fr/constituencies/vaughan-woodbridge(825)"                               
+#&gt; [319] "/members/fr/constituencies/victoria(938)"                                         
+#&gt; [320] "/members/fr/constituencies/ville-marie-le-sud-ouest-ile-des-soeurs(713)"          
+#&gt; [321] "/members/fr/constituencies/vimy(714)"                                             
+#&gt; [322] "/members/fr/constituencies/waterloo(826)"                                         
+#&gt; [323] "/members/fr/constituencies/wellington-halton-hills(827)"                          
+#&gt; [324] "/members/fr/constituencies/west-vancouver-sunshine-coast-sea-to-sky-country(939)" 
+#&gt; [325] "/members/fr/constituencies/whitby(828)"                                           
+#&gt; [326] "/members/fr/constituencies/willowdale(829)"                                       
+#&gt; [327] "/members/fr/constituencies/windsor-west(831)"                                     
+#&gt; [328] "/members/fr/constituencies/windsor-tecumseh(830)"                                 
+#&gt; [329] "/members/fr/constituencies/winnipeg-centre(846)"                                  
+#&gt; [330] "/members/fr/constituencies/winnipeg-south-centre(849)"                            
+#&gt; [331] "/members/fr/constituencies/winnipeg-north(847)"                                   
+#&gt; [332] "/members/fr/constituencies/winnipeg-south(848)"                                   
+#&gt; [333] "/members/fr/constituencies/yellowhead(897)"                                       
+#&gt; [334] "/members/fr/constituencies/york-centre(832)"                                      
+#&gt; [335] "/members/fr/constituencies/york-simcoe(833)"                                      
+#&gt; [336] "/members/fr/constituencies/york-south-weston(834)"                                
+#&gt; [337] "/members/fr/constituencies/yorkton-melville(863)"                                 
+#&gt; [338] "/members/fr/constituencies/yukon(940)"
+```
+]
+
+
+
+
+
+&lt;!-- ### .fancy[Exemple 2] .seventyfive[Résolution] --&gt;
+
+
+&lt;!-- # Chaque élément de `mp_tuiles` contient les données sur un seul député --&gt;
+&lt;!-- mp_tuiles &lt;- rvest::html_elements(page, "[class='mip-mp-name']") --&gt;
+
+&lt;!-- # La fonction `extract_all_information_on_an_mp` permet d'extraire les données d'une seule tuile --&gt;
+&lt;!-- # Cette fonction pourra ensuite être appliqué à chacune des tuiles contenues dans mp_tuiles --&gt;
+&lt;!-- extract_all_information_on_an_mp &lt;- function(mp_tuile){ --&gt;
+
+&lt;!-- ### .fancy[Exemple 2] .seventyfive[Résolution] --&gt;
+
+&lt;!-- extract_all_information_on_an_mp &lt;- function(mp_tuile){ --&gt;
+
+&lt;!--   # Extract name --&gt;
+&lt;!--   name_elem &lt;- rvest::html_element(mp_tuile, ".ce-mip-mp-name") --&gt;
+&lt;!--   name &lt;- rvest::html_text(name_elem) --&gt;
+
+&lt;!--   # Extract Party --&gt;
+&lt;!--   party_elem &lt;- rvest::html_element(mp_tuile, ".ce-mip-mp-party") --&gt;
+&lt;!--   party &lt;- rvest::html_text(party_elem) --&gt;
+
+&lt;!--   # Extract Link --&gt;
+&lt;!--   link &lt;- rvest::html_attr(mp_tuile, "href") --&gt;
+&lt;!--   link &lt;- paste0("https://www.noscommunes.ca", link) --&gt;
+
+&lt;!--   out &lt;- tibble::tibble(name, party, link) --&gt;
+
+&lt;!--   return(out) --&gt;
+
+
+&lt;!-- ### .fancy[Exemple 2] .seventyfive[Résolution avec `purrr::map_dfr`] --&gt;
+
+&lt;!-- mp_tuiles &lt;- rvest::html_elements(page, "[class='mip-mp-name']") --&gt;
+&lt;!-- # purrr::map_dfr applique extract_all_information_on_an_mp à chaque élément de mp_tuiles --&gt;
+&lt;!-- purrr::map_dfr(mp_tuiles, extract_all_information_on_an_mp) --&gt;
+
+&lt;!-- ### .fancy[Exemple 2] .seventyfive[Résolution avec `for()`] --&gt;
+
+&lt;!-- all_data &lt;- tibble::tibble() --&gt;
+&lt;!-- for(mp_tuile in mp_tuiles){ --&gt;
+&lt;!--   new_tile &lt;- extract_all_information_on_an_mp(mp_tuile) --&gt;
+&lt;!--   all_data &lt;- dplyr::bind_rows(all_data, new_tile) --&gt;
+&lt;!-- all_data --&gt;
+
+---
+
+&lt;center&gt;
+&lt;h3&gt; .fancy[4 Nettoyer] .seventyfive[L'éternel recommencement] &lt;/h3&gt;
+
+&lt;img src = "images/sisyphe.png" style = "width = 15%"&gt;
+&lt;/center&gt;
+
+---
+
+### .fancy[Nettoyer] .seventyfive[L'éternel recommencement]
+
+Une fois extraite, il faut encore:
+
++ transformer les valeurs numériques en `numeric`
+--
+
++ transformer les dates en `Date`
+--
+
++ ajouter de nouvelles variables (notamment `lgl`)
+--
+
++ enlever les espaces superflus des vecteurs `chr`
+--
+
+
+Tout cela, à l'aide des suspects habituels:
+
++ [`{dplyr}`](https://dplyr.tidyverse.org/) pour manipuler les jeux de données
++ [`{stringr}`](https://stringr.tidyverse.org/) pour manipuler les vecteurs `chr`
++ [`{lubridate}`](https://lubridate.tidyverse.org/) pour manipuler les dates
++ [`{purrr}`](https://purrr.tidyverse.org/) pour manipuler/itérer sur les listes
+
+---
+
+### Pour résumer
+
+Un projet d'aspiration automatique s'articule autour de quatre axes:
+
+1. .fancy[Naviguer] .seventyfive[collecter l'ensemble des adresses à visiter]
+--
+
+2. .fancy[Aspirer] .seventyfive[charger le code HTML formant la page brute]
+--
+
+3. .fancy[Extraire] .seventyfive[raffiner les données brutes]
+--
+
+4. .fancy[Nettoyer] .seventyfive[finaliser les données selon le format souhaité]
+
+---
+
+&lt;center&gt;
+&lt;h3&gt; 9 conseils pour devenir une "gratteuse" professionnelle &lt;/h3&gt;
+&lt;/center&gt;
+
+&lt;br&gt;
+&lt;center&gt;
+&lt;img src = "images/meme/me-call-advice.jpeg" style = "width = 50%"&gt;
+&lt;/center&gt;
+
+---
+
+&gt; 1 Utilisez SelectorGadget pour se familiariser avec les sélecteurs CSS
+
+Pour en apprendre plus [1](https://selectorgadget.com/) ; [2](https://rvest.tidyverse.org/articles/articles/selectorgadget.html)
+
+&lt;center&gt;
+&lt;img src = "images/selector_exemple.png" style = "width = 100%"&gt;
+&lt;/center&gt;
+
+---
+
+&lt;br&gt;
+
+&gt; 2 Considérez les implications techniques et légales de l'aspiration automatique
+
+Les noms de domaines incluent un fichier `robots.txt` précisant les sous-domaines pouvant être aspirés automatiquement. 
+
+  + [{robotstxt}](https://cran.r-project.org/web/packages/robotstxt/vignettes/using_robotstxt.html)
+
+---
+
+&lt;br&gt;
+
+&gt; 2 Considérez les implications tecniques et légales de l'aspiration automatique
+
+Chaque requête HTTP exerce un poid technique sur le serveur, évitez de surcharger avec des requêtes rapides et réduisez le rythme de requête.
+
+
+```r
+for(link in links){
+  aspire(link)
+  # Ajouter une second de pause entre chaque aspiration
+  Sys.sleep(1)
+}
+```
+
+---
+
+&gt; 3 Aspirez directement les tableaux avec `rvest::html_table`
+
+Les tableaux HTML (y compris ceux de Wikipédia) peuvent être aspirés directement.
+
+.panelset[
+.panel[.panel-name[Germany]
+
+.details[
+
+```r
+"https://de.wikipedia.org/wiki/Bundestagswahl" %&gt;%
+  xml2::read_html() %&gt;%
+  rvest::html_table() %&gt;%
+  purrr::chuck(2)
+```
+
+```
+#&gt; # A tibble: 20 × 11
+#&gt;    Wahltag       Wahlbeteiligung `CDU/CSU` SPD   FDP   Grüne1 Linke2 AfD   DP   
+#&gt;    &lt;chr&gt;         &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
+#&gt;  1 14. August 1… 78,5            31,0      29,2  11,9  —      —      —     4,0  
+#&gt;  2 6. September… 86,0            45,2      28,8  09,5  —      —      —     3,3  
+#&gt;  3 15. Septembe… 87,8            50,2      31,8  07,7  —      —      —     3,4  
+#&gt;  4 17. Septembe… 87,7            45,3      36,2  12,8  —      —      —     GDP …
+#&gt;  5 19. Septembe… 86,8            47,6      39,3  09,5  —      —      —     —    
+#&gt;  6 28. Septembe… 86,7            46,1      42,7  05,8  —      —      —     —    
+#&gt;  7 19. November… 91,1            44,9      45,8  08,4  —      —      —     —    
+#&gt;  8 3. Oktober 1… 90,7            48,6      42,6  07,9  b      —      —     —    
+#&gt;  9 5. Oktober 1… 88,6            44,5      42,9  10,6  01,5   —      —     —    
+#&gt; 10 6. März 1983  89,1            48,8      38,2  07,0  05,6   —      —     —    
+#&gt; 11 25. Januar 1… 84,3            44,3      37,0  09,1  08,3   —      —     —    
+#&gt; 12 2. Dezember … 77,8            43,8      33,5  11,0  05,1   02,4   —     —    
+#&gt; 13 16. Oktober … 79,0            41,4      36,4  06,9  07,3   04,4   —     —    
+#&gt; 14 27. Septembe… 82,2            35,1      40,9  06,2  06,7   05,1   —     —    
+#&gt; 15 22. Septembe… 79,1            38,5      38,5  07,4  08,6   04,0   —     —    
+#&gt; 16 18. Septembe… 77,7            35,2      34,2  09,8  08,1   08,7   —     —    
+#&gt; 17 27. Septembe… 70,9            33,8      23,0  14,6  10,7   11,9   —     —    
+#&gt; 18 22. Septembe… 71,5            41,5      25,7  04,8  08,4   08,6   04,7  —    
+#&gt; 19 24. Septembe… 76,2            32,9      20,5  10,7  08,9   09,2   12,6  —    
+#&gt; 20 26. Septembe… 76,6            24,1      25,7  11,5  14,8   4,9    10,3  —    
+#&gt; # … with 2 more variables: GB/BHE3 &lt;chr&gt;, Sonstige4 &lt;chr&gt;
+```
+]
+]
+
+.panel[.panel-name[Canada]
+.details[
+
+```r
+"https://en.wikipedia.org/wiki/List_of_Canadian_federal_general_elections" %&gt;%
+  xml2::read_html() %&gt;%
+  rvest::html_table() %&gt;%
+  purrr::chuck(3)
+```
+
+```
+#&gt; # A tibble: 44 × 15
+#&gt;    No.    Year Summary   Government Government `Official oppos… `Official oppos…
+#&gt;    &lt;chr&gt; &lt;int&gt; &lt;chr&gt;     &lt;lgl&gt;      &lt;chr&gt;      &lt;lgl&gt;            &lt;chr&gt;           
+#&gt;  1 1st    1867 "Liberal… NA         100[2]     NA               62              
+#&gt;  2 2nd    1872 "Conserv… NA         100[3]     NA               95              
+#&gt;  3 3rd    1874 "Liberal… NA         129        NA               65[2]           
+#&gt;  4 4th    1878 "Conserv… NA         134[2]     NA               63              
+#&gt;  5 5th    1882 "Conserv… NA         134[4]     NA               73              
+#&gt;  6 6th    1887 "Conserv… NA         124[4]     NA               80              
+#&gt;  7 7th    1891 "Conserv… NA         118[4]     NA               90              
+#&gt;  8 8th    1896 "Liberal… NA         117        NA               86[2]           
+#&gt;  9 9th    1900 "Liberal… NA         128        NA               79[2]           
+#&gt; 10 10th   1904 "Liberal… NA         137        NA               75[2]           
+#&gt; # … with 34 more rows, and 8 more variables: Third party &lt;chr&gt;,
+#&gt; #   Third party &lt;chr&gt;, Fourth party &lt;chr&gt;, Fourth party &lt;chr&gt;,
+#&gt; #   Fifth party &lt;chr&gt;, Fifth party &lt;chr&gt;, Other &lt;int&gt;, Total seats &lt;int&gt;
+```
+]
+]
+
+]
+
+---
+
+&lt;br&gt;
+
+&gt; 4 Apprenez à maîtriser les expressions régulières
+
+Les expréssions régulières (regex) sont un langage pour décrire des schémas de charactère. 
+
+Par exemple, `\\d{2}\\s\\d{2}` correspond à deux chiffres, suivis d'un espace, suivi de deux chiffres. Si elles semblent parfois obscures et alétoires, elles permettent un nettoyage efficace et rapide de données textuelles.
+
+Pour en apprendre plus sur les regex [1](https://r4ds.hadley.nz/regular-expressions.html) ; [2](https://regenerativetoday.com/a-complete-beginners-guide-to-regular-expressions-in-r/)
+
+---
+
+&lt;br&gt;
+
+&gt; 5 Peaufinez vos compétences en sélecteurs CSS
+
+Les sélecteurs CSS sont souvent (comme ici) évoqués de façon superficielle. Ce sont, en réalité, des outils à la syntaxe très puissante.
+
+Pour en apprendre plus [1](https://moderncss.dev/guide-to-advanced-css-selectors-part-one/) ; [2](https://www.geeksforgeeks.org/advanced-selectors-in-css/) ; [3](https://www.w3schools.com/cssref/css_selectors.asp) ; [4](https://www.smashingmagazine.com/2009/08/taming-advanced-css-selectors/) ; [5](https://www.learnhowtoprogram.com/user-interfaces/ui-development-basics/advanced-selectors)
+
+---
+
+&lt;br&gt;
+
+&gt; 6 Si elles existent, utilisez les API officielles
+
+Une API (Application Programming Interface) permet la dissémination de données formatées pour les machines. 
+&lt;!-- Certaines plateformes proposent des API afin de mettre leurs données à disposition du public.  --&gt;
+&lt;!-- Elles contrastent donc avec les sites web, qui disséminent les données dans un format lisible par les humains.  --&gt;
+
++ [academictwitteR](https://github.com/cjbarrie/academictwitteR): Twitter
++ [riingo](https://business-science.github.io/riingo/): Données boursières (Tiingo)
++ [tuber](https://github.com/soodoku/tuber): Youtube
++ [WikipediR](https://github.com/Ironholds/WikipediR/): Wikipédia
++ [RedditExtractor](https://github.com/ivan-rivera/RedditExtractor): Reddit
+
+---
+
+&gt; 7 Remontez le temps avec la [Wayback Machine](https://archive.org/web/)
+
+--
+
+&lt;img src = "images/ulaval.png" style = "height: 70%"&gt;
+
+---
+
+&lt;br&gt;
+
+&gt; 8 Révélez les API cachées dans les site web grâce à la rétro-ingénierie des sites web
+
+Beaucoup de sites web conservent leurs données dans des bases de données accessibles via une API personnalisée. Ces API "officieuses" peuvent être exploitées afin d'extraire un grand nombre de données. 
+
+Pour en apprendre plus [1](https://medium.com/@williamyeny/finding-ratemyprofessors-private-api-with-chrome-developer-tools-bd6747dd228d) ; [2](https://qxf2.com/blog/api-testing-developer-tools/)
+
+---
+
+&lt;br&gt;
+
+&gt; 9 Simulez de réels navigateurs web afin de dépasser les problèmes de JS
+
+Pour les plus acharnées souhaitant aspirer des pages impliquant des interactions complexes: 
+
+  + [Selenium](https://github.com/ropensci/RSelenium)
+  + [Puppeteer](https://pypi.org/project/pyppeteer/)
+  + [Playwright](https://playwright.dev/python/docs/intro)/[Playwrightr](https://github.com/benjaminguinaudeau/playwrightr)
+
+---
+
+class: center, middle, inverse
+
+### Merci pour votre attention!
+
+&lt;br&gt;
+
+### et n'oubliez pas
+
+&lt;center&gt;
+&lt;img src="images/meme/tumblr_d3b29849ea0cd256471650fb6fd9d43f_6ec229bc_540.jpeg" style = "width: 30%"&gt;
+&lt;/center&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%<br>",
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<script>
+  (function() {
+    var divHTML = document.querySelectorAll(".details-open");
+    divHTML.forEach(function (el) {
+      var preNodes = el.getElementsByTagName("pre");
+      var outputNode = preNodes[1];
+      outputNode.outerHTML = "<details open class='output'><summary>Run</summary>" + outputNode.outerHTML + "</details>";
+    })
+  })();
+(function() {
+  var divHTML = document.querySelectorAll(".details");
+  divHTML.forEach(function (el) {
+    var preNodes = el.getElementsByTagName("pre");
+    var outputNode = preNodes[1];
+    outputNode.outerHTML = "<details class='output'><summary>Run</summary>" + outputNode.outerHTML + "</details>";
+  })
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
